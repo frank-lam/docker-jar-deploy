@@ -1,10 +1,14 @@
 version: '3.1'
 services:
+  # 修改为你的项目名字
   springboot-hello-server:
     restart: always
-    image: springboot-hello
-    container_name: springboot-hello-server
+    build: '.'
+    # 修改容器名字，请勿重名，否则无法启动
+    container_name: springboot-hello
+    # 配置端口号，只需要修改冒号左边的端口即可，右边 8080 是容器中的端口号，请根据实际情况来修改
     ports:
-      - 9192:8080
+      - 9195:8080
+    # 配置数据卷映射目录，修改左边你的日制文件需要保存的位置
     volumes:
-      - /usr/local/docker-demo/spring-hello/run-logs:/spring-hello-server/run-logs
+      - /usr/local/docker-llc/docker-jar-deploy/run-logs:/webapp/run-logs

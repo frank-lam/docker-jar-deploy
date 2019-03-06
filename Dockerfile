@@ -1,10 +1,10 @@
 FROM openjdk:8
 
 WORKDIR /
-COPY target ./spring-hello-server
+COPY target ./webapp
 
-WORKDIR /spring-hello-server
+WORKDIR /webapp
 
-ENTRYPOINT ["/spring-hello-server/startup.sh"]
+ENTRYPOINT ["/webapp/startup.sh"]
 
 CMD ["/bin/bash"]
