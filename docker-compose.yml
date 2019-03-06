@@ -1,0 +1,10 @@
+version: '3.1'
+services:
+  springboot-hello-server:
+    restart: always
+    image: springboot-hello
+    container_name: springboot-hello-server
+    ports:
+      - 9192:8080
+    volumes:
+      - /usr/local/docker-demo/spring-hello/run-logs:/spring-hello-server/run-logs
