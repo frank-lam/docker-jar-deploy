@@ -11,6 +11,8 @@
 
 ## 快速启动
 
+![image-20190307101147724](assets/image-20190307101147724.png)
+
 ### 文件目录结构
 
 ```
@@ -27,6 +29,8 @@
         ├── src
         └── startup.sh      容器内项目启动文件
 ```
+
+
 
 ### 需要配置哪些文件？
 
@@ -71,5 +75,129 @@ jar_name='你的项目 Jar 包生成文件名'
 
 ```shell
 sh run.sh
+```
+
+项目启动后即刻使用你的 `IP:Port` 进行访问
+
+
+
+## 域名配置
+
+1. 配置内网穿透服务（lanproxy）
+
+![image-20190307093913562](assets/image-20190307093913562.png)
+
+2. 阿里云后台域名解析一个 A 类地址，例如：fastdfs   - > 120.23.23.12
+
+![image-20190307095229826](assets/image-20190307095229826.png)
+
+3. 配置 Nginx 反向代理服务，`/etc/nginx/conf.d` 目录下创建你的配置文件，例如以下格式：`fastdfs.biodwhu.cn.conf`
+
+```
+server {
+    listen 80;
+    server_name fastdfs.biodwhu.cn;
+    location / {
+        proxy_pass http://127.0.0.1:9060/;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+        proxy_set_header N-NginS-Proxy true;
+    }
+ }
+```
+
+重启 Nginx 服务，`service nginx restart`
+
+4. 此时即刻访问 `fastdfs.biodwhu.cn` 服务！
+
+
+
+
+
+## 项目配置附录
+
+### run.sh
+
+```shell
+# 配置
+## 代码项目名称
+project_name='docker-springboot-demo'
+
+# 更新代码
+cd $project_name/ ; git pull ;cd ..
+
+# 打包程序
+rm target/*.jar -f
+cd $project_name/
+mvn clean package
+cp target/*.jar ../target/ -f
+cd ..
+
+# 启动项目
+docker-compose up -d --build --force-recreate
+
+# 构建镜像
+# sh build-image.sh
+# docker-compose up -d
+```
+
+
+
+### restart.sh
+
+```shell
+docker-compose down
+sh run.sh
+```
+
+
+
+### stop.sh
+
+```shell
+docker-compose down
+```
+
+
+
+
+
+### Dockerfile
+
+```shell
+FROM openjdk:8
+
+WORKDIR /
+COPY target ./webapp
+
+WORKDIR /webapp
+
+ENTRYPOINT ["/webapp/startup.sh"]
+
+CMD ["/bin/bash"]
+```
+
+
+
+### target/startup.sh
+
+```shell
+#!/bin/bash
+
+# java -jar /mail-server/mail-consumer.jar --name="Spring" --server.port=8090 &
+# nohup java -jar mail-producer.jar --name="Spring" --server.port=8080 > mail-producer.log &
+
+# 请修改你的 Jar 包名
+jar_name='quick-docker-1.0-SNAPSHOT.jar'
+
+tname=`date +%Y-%m-%d-%H%M%S`
+
+touch index.html
+echo "startup the webapp" > index.html
+
+nohup java -jar ${jar_name} --name="Spring" --server.port=8080 > "run-logs/webapp-${tname}.log" 2>&1 &
+
+tail -f index.html
 ```
 
