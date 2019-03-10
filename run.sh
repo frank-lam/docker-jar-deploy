@@ -7,7 +7,7 @@ deploy_path='/var/www/ai-cloud-producer'
 project_path='docker-springboot-demo'
 
 # 更新代码
-cd $project_path/ ; git pull ;cd ..
+cd $project_path/ ; git pull ;cd $deploy_path
 
 # 打包程序
 rm target/*.jar -f
