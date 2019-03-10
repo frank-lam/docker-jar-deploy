@@ -65,7 +65,11 @@ serviies:
 2. 修改 run.sh 中的配置项
 
 ```shell
-project_name=‘你的项目名字，和你的代码目录一致’
+# 当前部分项目目录(绝对路径)
+deploy_path='/var/www/ai-cloud-producer'
+
+# 代码项目目录路径
+project_path='docker-springboot-demo'
 ```
 
 - 注意：请确保 git 的身份验证，否则再 git pull 的步骤会无法更新代码
