@@ -65,7 +65,7 @@ serviies:
 2. 修改 run.sh 中的配置项
 
 ```shell
-# 当前部分项目目录(绝对路径)
+# 当前部署项目目录(绝对路径)
 deploy_path='/var/www/ai-cloud-producer'
 
 # 代码项目目录路径
